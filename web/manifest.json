@@ -1,0 +1,12 @@
+{
+  "name": "ROOM +962",
+  "short_name": "ROOM +962",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "description": "Private members application portal",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": []
+}
