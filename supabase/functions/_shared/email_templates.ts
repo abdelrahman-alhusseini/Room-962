@@ -42,11 +42,21 @@ export function buildEmail(templateKey: string, payload: Record<string, unknown>
       };
     }
     case 'application_accepted': {
-      const body = `${fullName ? `${fullName}, ` : ''}your application has been accepted. You can now sign in with the verified email and password used during application.`;
+      const firstName = fullName.trim().split(' ')[0] || 'Member';
+      const body = `${firstName},
+
+You are in.
+
+Your membership begins now. You will hear from me before the first gathering with everything you need.
+
+Welcome to the room.
+
+[Founder name]
+Room +962 · Amman, Jordan`;
       return {
-        subject: 'Room +962 membership',
+        subject: 'Room +962',
         text: body,
-        html: shell('Membership confirmed', body),
+        html: shell('Room +962', body.replaceAll('\n', '<br>')),
       };
     }
     case 'application_declined': {

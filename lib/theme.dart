@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RoomColors {
-  static const Color voidBlack = Color(0xFF050607);
-  static const Color obsidian = Color(0xFF0B0D10);
-  static const Color charcoal = Color(0xFF12161B);
-  static const Color slate = Color(0xFF1A2028);
-  static const Color border = Color(0xFF29313B);
-  static const Color gold = Color(0xFFCDBB9A);
-  static const Color goldLight = Color(0xFFE1D1B0);
-  static const Color goldPale = Color(0xFFF0E8D9);
-  static const Color goldMuted = Color(0xFF9E8F78);
-  static const Color offWhite = Color(0xFFECE7DD);
-  static const Color muted = Color(0xFF7E858D);
-  static const Color error = Color(0xFFC0392B);
-  static const Color success = Color(0xFF6B8F7B);
+  static const Color voidBlack = Color(0xFF0B0A09);
+  static const Color obsidian = Color(0xFF141412);
+  static const Color charcoal = Color(0xFF111110);
+  static const Color slate = Color(0xFF1A1A18);
+  static const Color border = Color(0xFF1E1C1A);
+  static const Color gold = Color(0xFFC4A96B);
+  static const Color goldLight = Color(0xFFD2BC82);
+  static const Color goldPale = Color(0xFFE7D8B6);
+  static const Color goldMuted = Color(0xFF8A7248);
+  static const Color offWhite = Color(0xFFDEDAD4);
+  static const Color muted = Color(0xFF5A5550);
+  static const Color error = Color(0xFF8C4040);
+  static const Color success = Color(0xFF6F866C);
 }
 
 class RoomTheme {
   static ThemeData get theme {
     final cormorant = GoogleFonts.cormorantGaramondTextTheme();
-    final inter = GoogleFonts.interTextTheme();
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: RoomColors.voidBlack,
+      fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
       colorScheme: const ColorScheme.dark(
         primary: RoomColors.gold,
         secondary: RoomColors.goldLight,
@@ -36,48 +36,50 @@ class RoomTheme {
         displayLarge: cormorant.displayLarge?.copyWith(
           fontSize: 76,
           fontWeight: FontWeight.w300,
+          fontStyle: FontStyle.italic,
           color: RoomColors.gold,
           letterSpacing: 7.6,
           height: 1.0,
         ),
         displayMedium: cormorant.displayMedium?.copyWith(
           fontSize: 44,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w300,
+          fontStyle: FontStyle.italic,
           color: RoomColors.offWhite,
-          letterSpacing: 2.0,
+          letterSpacing: 1.0,
           height: 1.08,
         ),
         headlineMedium: cormorant.headlineMedium?.copyWith(
-          fontSize: 25,
+          fontSize: 26,
           fontWeight: FontWeight.w400,
           color: RoomColors.offWhite,
-          letterSpacing: 0.8,
+          letterSpacing: 0.5,
           height: 1.35,
         ),
-        titleMedium: inter.titleMedium?.copyWith(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
+        titleMedium: cormorant.titleMedium?.copyWith(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
           color: RoomColors.goldMuted,
-          letterSpacing: 1.4,
+          letterSpacing: 1.95,
           height: 1.4,
         ),
-        bodyLarge: inter.bodyLarge?.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w300,
+        bodyLarge: cormorant.bodyLarge?.copyWith(
+          fontSize: 17,
+          fontWeight: FontWeight.w400,
           color: RoomColors.offWhite,
-          height: 1.75,
+          height: 1.65,
         ),
-        bodyMedium: inter.bodyMedium?.copyWith(
-          fontSize: 13,
-          fontWeight: FontWeight.w300,
+        bodyMedium: cormorant.bodyMedium?.copyWith(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
           color: RoomColors.goldMuted,
-          height: 1.6,
+          height: 1.55,
         ),
-        labelLarge: inter.labelLarge?.copyWith(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
+        labelLarge: cormorant.labelLarge?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
           color: RoomColors.gold,
-          letterSpacing: 1.4,
+          letterSpacing: 1.8,
         ),
       ),
       inputDecorationTheme: const InputDecorationTheme(
@@ -99,14 +101,14 @@ class RoomTheme {
         ),
         labelStyle: TextStyle(
           color: RoomColors.goldMuted,
-          fontSize: 10,
-          letterSpacing: 1.2,
-          fontWeight: FontWeight.w500,
+          fontSize: 11,
+          letterSpacing: 1.8,
+          fontWeight: FontWeight.w600,
         ),
         hintStyle: TextStyle(
           color: RoomColors.muted,
-          fontSize: 14,
-          fontWeight: FontWeight.w300,
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
         ),
       ),
     );

@@ -342,7 +342,7 @@ class _LandingPanel extends StatelessWidget {
         Text(
           'Create an account. The questionnaire opens after email verification.',
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.muted,
             fontSize: 11,
             height: 1.5,
@@ -418,7 +418,7 @@ class _CreateAccountPanel extends StatelessWidget {
         Text(
           'Only verified email addresses can continue.',
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.muted,
             fontSize: 10,
             height: 1.5,
@@ -455,7 +455,7 @@ class _VerifyEmailPanel extends StatelessWidget {
       children: [
         Text(
           'We sent a verification link to $email',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.goldMuted,
             fontSize: 12,
             height: 1.5,
@@ -464,7 +464,7 @@ class _VerifyEmailPanel extends StatelessWidget {
         const SizedBox(height: 14),
         Text(
           'Open the link from your inbox to verify the email address. The questionnaire is available only after verification.',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.muted,
             fontSize: 11,
             height: 1.6,
@@ -473,7 +473,7 @@ class _VerifyEmailPanel extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           'After verification, return here to continue.',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.muted,
             fontSize: 10,
           ),
@@ -563,7 +563,7 @@ class _AuthPanelFrame extends StatelessWidget {
           onTap: back,
           child: Text(
             'BACK',
-            style: GoogleFonts.inter(
+            style: GoogleFonts.cormorantGaramond(
               color: RoomColors.goldMuted,
               fontSize: 10,
               fontWeight: FontWeight.w500,
@@ -611,7 +611,7 @@ class _AuthTextField extends StatelessWidget {
       autocorrect: false,
       enableSuggestions: false,
       cursorColor: RoomColors.gold,
-      style: GoogleFonts.inter(
+      style: GoogleFonts.cormorantGaramond(
         color: RoomColors.offWhite,
         fontSize: 15,
         fontWeight: FontWeight.w300,
@@ -695,7 +695,7 @@ class _PrimaryLineButton extends StatelessWidget {
         child: Text(
           text.toUpperCase(),
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: enabled ? RoomColors.gold : RoomColors.muted,
             fontSize: 11,
             fontWeight: FontWeight.w500,
@@ -843,7 +843,7 @@ class DemoPerspectiveScreen extends StatelessWidget {
                     },
                     child: Text(
                       'BACK',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.cormorantGaramond(
                         color: RoomColors.goldMuted,
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -861,7 +861,7 @@ class DemoPerspectiveScreen extends StatelessWidget {
                   const SizedBox(height: 14),
                   Text(
                     'Preview each side of the app. Anything changed in admin is kept live in this demo session.',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.cormorantGaramond(
                       color: RoomColors.goldMuted,
                       fontSize: 12,
                       height: 1.6,
@@ -914,7 +914,7 @@ class DemoPerspectiveScreen extends StatelessWidget {
                   const SizedBox(height: 34),
                   Text(
                     'Demo access is for testing only.',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.cormorantGaramond(
                       color: RoomColors.muted,
                       fontSize: 10,
                       height: 1.5,

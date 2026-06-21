@@ -100,3 +100,13 @@ flutter build web --release
 ## Important note
 
 Real email verification and automated emails require Supabase Auth plus a transactional email provider. The project now includes the database migration, email templates, and Edge Function needed to wire this into production, but the real service keys must be added in your Supabase dashboard.
+
+
+## v12 Home brief updates
+
+This build applies the Home Screen brief more exactly: warmer near-black background, cooler gold, borderless next-gathering panel, hairline-separated announcements, `ENTER →` CTA, text-only navigation, and DM Sans utility text for labels, navigation, dates, metadata, and announcement body copy.
+
+
+## v13 Gatherings brief implementation
+
+This build applies the Gatherings brief: borderless event panels, #0B0A09 background, #141412 panels, #C4A96B hairlines, text-only navigation, DM Sans structural labels, Cormorant Garamond Light Italic event names, solid primary RSVP button, quieter secondary RSVP action, long-form date treatment, updated attendance/full copy, and fuller event detail descriptions.

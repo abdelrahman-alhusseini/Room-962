@@ -1056,7 +1056,7 @@ class _AdminHeader extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             subtitle!,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.cormorantGaramond(
               color: RoomColors.goldMuted,
               fontSize: 12,
               height: 1.5,

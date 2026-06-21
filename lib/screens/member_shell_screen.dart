@@ -84,24 +84,15 @@ class _MemberTopBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
         children: [
-          InkWell(
-            onTap: onBack,
-            child: const Text(
-              'BACK',
-              style: TextStyle(
-                color: RoomColors.goldMuted,
-                fontSize: 10,
-                letterSpacing: 1.4,
-              ),
-            ),
-          ),
+          _QuietNavText(text: 'BACK', onTap: onBack),
           const Spacer(),
-          const Text(
+          Text(
             'MEMBER VIEW',
-            style: TextStyle(
-              color: RoomColors.muted,
+            style: GoogleFonts.dmSans(
+              color: RoomColors.gold,
               fontSize: 9,
-              letterSpacing: 1.4,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.5,
             ),
           ),
         ],
@@ -121,44 +112,28 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      Icons.crop_square_rounded,
-      Icons.calendar_today_outlined,
-      Icons.radio_button_unchecked_rounded,
-      Icons.person_outline_rounded,
-    ];
+    final items = ['HOME', 'GATHERINGS', 'ABOUT', 'PROFILE'];
 
     return Container(
       height: 64 + MediaQuery.of(context).padding.bottom,
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-      decoration: const BoxDecoration(
-        color: RoomColors.obsidian,
-        border: Border(top: BorderSide(color: RoomColors.border, width: 1)),
-      ),
+      color: RoomColors.voidBlack,
       child: Row(
         children: List.generate(items.length, (i) {
           final active = i == index;
           return Expanded(
             child: InkWell(
               onTap: () => onChanged(i),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    width: 16,
-                    height: 2,
-                    color: active ? RoomColors.gold : Colors.transparent,
+              child: Center(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 180),
+                  style: _labelStyle(
+                    color: active ? RoomColors.gold : RoomColors.muted,
+                    size: 11,
+                    spacing: 1.8,
                   ),
-                  const SizedBox(height: 10),
-                  Icon(
-                    items[i],
-                    color: active
-                        ? RoomColors.gold
-                        : RoomColors.muted.withOpacity(0.55),
-                    size: 24,
-                  ),
-                ],
+                  child: Text(items[i]),
+                ),
               ),
             ),
           );
@@ -188,42 +163,46 @@ class HomeScreen extends StatelessWidget {
                 title: 'ROOM +962',
                 subtitle: roomLongDate(DateTime.now()),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
               if (nextGathering != null)
                 _NextGatheringCard(event: nextGathering)
               else
-                const _MutedMemberCard(
+                const _EmptyLine(
                   title: 'NO GATHERING ANNOUNCED',
-                  body: 'The calendar is quiet for now.',
+                  body: 'The next gathering is being arranged. Members will be notified.',
                 ),
-              const SizedBox(height: 34),
+              const SizedBox(height: 40),
               const _SmallLabel('FROM THE ROOM'),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               if (announcements.isEmpty)
-                const _MutedMemberCard(
+                const _EmptyLine(
                   title: 'NO NOTICE',
                   body: 'Nothing has been posted from the room yet.',
                 )
               else
                 for (final announcement in announcements)
-                  _AnnouncementCard(
+                  _AnnouncementEntry(
                     date: roomShortDate(
                       announcement.publishedAt ?? announcement.createdAt,
                     ),
                     body: announcement.body,
                   ),
-              const SizedBox(height: 20),
-              const _SmallLabel('A WORD FROM THE FOUNDER'),
-              const SizedBox(height: 12),
+              const SizedBox(height: 48),
+              const GoldRule(width: double.infinity, opacity: 0.35),
+              const SizedBox(height: 28),
+              const _SmallLabel('FROM THE FOUNDER'),
+              const SizedBox(height: 18),
               Text(
                 'A room only matters when the people inside it make each other sharper, calmer, and more generous.',
                 style: GoogleFonts.cormorantGaramond(
                   color: RoomColors.offWhite,
-                  fontSize: 18,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w300,
                   fontStyle: FontStyle.italic,
-                  height: 1.7,
+                  height: 1.6,
                 ),
               ),
+              const SizedBox(height: 48),
             ],
           ),
         );
@@ -252,43 +231,28 @@ class _NextGatheringCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: RoomColors.charcoal,
-          border: Border.fromBorderSide(BorderSide(color: RoomColors.gold)),
-        ),
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
+        color: RoomColors.obsidian,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _SmallLabel('NEXT GATHERING', gold: true),
-            const SizedBox(height: 10),
+            const SizedBox(height: 14),
             Text(
               event.title,
               style: GoogleFonts.cormorantGaramond(
-                color: RoomColors.offWhite,
-                fontSize: 24,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1,
+                color: Colors.white,
+                fontSize: 40,
+                fontWeight: FontWeight.w300,
+                fontStyle: FontStyle.italic,
+                height: 1.05,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              event.dateLine,
-              style: const TextStyle(
-                color: RoomColors.goldMuted,
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 14),
-            const Text(
-              'VIEW DETAILS →',
-              style: TextStyle(
-                color: RoomColors.gold,
-                fontSize: 11,
-                letterSpacing: 1.5,
-              ),
-            ),
+            const SizedBox(height: 12),
+            _MetaText(event.homeDateLine, color: RoomColors.gold),
+            const SizedBox(height: 18),
+            const _SmallLabel('ENTER →', gold: true),
           ],
         ),
       ),
@@ -296,20 +260,19 @@ class _NextGatheringCard extends StatelessWidget {
   }
 }
 
-class _MutedMemberCard extends StatelessWidget {
+class _EmptyLine extends StatelessWidget {
   final String title;
   final String body;
 
-  const _MutedMemberCard({required this.title, required this.body});
+  const _EmptyLine({required this.title, required this.body});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.symmetric(vertical: 18),
       decoration: const BoxDecoration(
-        color: RoomColors.obsidian,
-        border: Border.fromBorderSide(BorderSide(color: RoomColors.border)),
+        border: Border(top: BorderSide(color: RoomColors.gold, width: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,9 +281,9 @@ class _MutedMemberCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             body,
-            style: const TextStyle(
+            style: GoogleFonts.cormorantGaramond(
               color: RoomColors.muted,
-              fontSize: 12,
+              fontSize: 15,
               height: 1.6,
             ),
           ),
@@ -351,7 +314,7 @@ class _EventsScreenState extends State<EventsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _TopTitle(title: 'GATHERINGS'),
+              const _TopTitle(title: 'GATHERINGS', structural: true),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -368,11 +331,11 @@ class _EventsScreenState extends State<EventsScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 26),
+              const SizedBox(height: 20),
               if (events.isEmpty)
-                const _MutedMemberCard(
+                const _EmptyLine(
                   title: 'NO GATHERINGS',
-                  body: 'The admin has not published anything in this section yet.',
+                  body: 'The next gathering is being arranged. Members will be notified.',
                 )
               else
                 for (final event in events) _EventCard(event: event),
@@ -404,11 +367,10 @@ class _FilterText extends StatelessWidget {
         children: [
           Text(
             text,
-            style: TextStyle(
-              color: active ? RoomColors.gold : RoomColors.goldMuted,
-              fontSize: 11,
-              letterSpacing: 1.6,
-              fontWeight: FontWeight.w500,
+            style: _labelStyle(
+              color: active ? RoomColors.gold : RoomColors.muted,
+              size: 11,
+              spacing: 1.7,
             ),
           ),
           const SizedBox(height: 6),
@@ -443,55 +405,53 @@ class _EventCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.only(top: 1),
         decoration: const BoxDecoration(
-          color: RoomColors.obsidian,
-          border: Border.fromBorderSide(BorderSide(color: RoomColors.border)),
+          border: Border(top: BorderSide(color: RoomColors.gold, width: 0.5)),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: Container(
+          width: double.infinity,
+          color: RoomColors.obsidian,
+          padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             _SmallLabel(event.typeLabel, gold: true),
             const SizedBox(height: 8),
             Text(
               event.title,
               style: GoogleFonts.cormorantGaramond(
                 color: RoomColors.offWhite,
-                fontSize: 23,
-                letterSpacing: 0.8,
+                fontSize: 34,
+                fontWeight: FontWeight.w300,
+                fontStyle: FontStyle.italic,
+                height: 1.08,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              event.dateLine,
-              style: GoogleFonts.cormorantGaramond(
-                color: RoomColors.goldMuted,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              event.locationName,
-              style: const TextStyle(color: RoomColors.muted, fontSize: 12),
             ),
             const SizedBox(height: 10),
+            _MetaText(event.dateLine, color: RoomColors.gold),
+            const SizedBox(height: 6),
+            _MetaText(event.locationName, color: RoomColors.muted),
+            const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    event.isFull ? 'FULL · ${event.capacityLine.toUpperCase()}' : event.capacityLine.toUpperCase(),
-                    style: TextStyle(
-                      color: event.isFull ? RoomColors.gold : RoomColors.goldMuted,
-                      fontSize: 10,
-                      letterSpacing: 1.2,
+                    event.isFull
+                        ? 'THIS GATHERING IS FULL'
+                        : event.capacityLine.toUpperCase(),
+                    style: _labelStyle(
+                      color: event.isFull ? RoomColors.gold : RoomColors.muted,
+                      size: 11,
+                      spacing: 1.1,
                     ),
                   ),
                 ),
                 if (event.rsvpStatus != null) _StatusBadge(text: event.rsvpStatus!),
               ],
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -538,12 +498,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             padding: const EdgeInsets.fromLTRB(22, 18, 22, 0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: InkWell(
+              child: _QuietNavText(
+                text: 'BACK',
                 onTap: () => Navigator.of(context).pop(),
-                child: const Text(
-                  '←',
-                  style: TextStyle(color: RoomColors.goldMuted, fontSize: 22),
-                ),
               ),
             ),
           ),
@@ -559,49 +516,43 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     widget.event.title,
                     style: GoogleFonts.cormorantGaramond(
                       color: RoomColors.offWhite,
-                      fontSize: 38,
+                      fontSize: 42,
+                      fontWeight: FontWeight.w300,
+                      fontStyle: FontStyle.italic,
                       height: 1.05,
                     ),
                   ),
                   const SizedBox(height: 24),
                   const GoldRule(width: double.infinity, opacity: 0.35),
                   const SizedBox(height: 22),
-                  Text(
-                    widget.event.dateLine,
-                    style: GoogleFonts.cormorantGaramond(
-                      color: RoomColors.offWhite,
-                      fontSize: 19,
-                    ),
-                  ),
+                  _MetaText(widget.event.dateLine, color: RoomColors.offWhite, size: 14),
                   const SizedBox(height: 10),
-                  Text(
-                    widget.event.locationName,
-                    style: const TextStyle(
-                      color: RoomColors.goldMuted,
-                      fontSize: 13,
-                    ),
-                  ),
+                  _MetaText(widget.event.locationName, color: const Color(0xFF7A7068)),
                   const SizedBox(height: 24),
                   const GoldRule(width: double.infinity, opacity: 0.35),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 24),
                   Text(
                     widget.event.description,
-                    style: const TextStyle(
+                    style: GoogleFonts.dmSans(
                       color: RoomColors.offWhite,
-                      fontSize: 14,
-                      height: 1.8,
-                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                      height: 1.7,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 32),
+                  const GoldRule(width: double.infinity, opacity: 0.25),
+                  const SizedBox(height: 16),
                   Text(
                     widget.event.showGuestCount
-                        ? '${widget.event.capacityLine.toUpperCase()}${widget.event.isFull ? ' · FULL' : ''}'
+                        ? (widget.event.isFull
+                            ? 'THIS GATHERING IS FULL'
+                            : widget.event.capacityLine.toUpperCase())
                         : 'CAPACITY ${widget.event.capacity}${widget.event.isFull ? ' · FULL' : ''}',
-                    style: TextStyle(
-                      color: widget.event.isFull ? RoomColors.gold : RoomColors.goldMuted,
-                      fontSize: 11,
-                      letterSpacing: 1.4,
+                    style: _labelStyle(
+                      color: widget.event.isFull ? RoomColors.gold : RoomColors.muted,
+                      size: 11,
+                      spacing: 1.4,
                     ),
                   ),
                 ],
@@ -611,13 +562,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           Container(
             padding: EdgeInsets.fromLTRB(
               22,
-              16,
+              18,
               22,
               18 + MediaQuery.of(context).padding.bottom,
             ),
             decoration: const BoxDecoration(
               color: RoomColors.voidBlack,
-              border: Border(top: BorderSide(color: RoomColors.gold)),
+              border: Border(top: BorderSide(color: RoomColors.gold, width: 0.5)),
             ),
             child: response == null
                 ? Column(
@@ -629,7 +580,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           style: GoogleFonts.cormorantGaramond(
                             color: RoomColors.goldMuted,
                             fontStyle: FontStyle.italic,
-                            fontSize: 17,
+                            fontSize: 18,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -638,22 +589,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           onTap: () => _recordResponse('UNABLE'),
                         ),
                       ] else ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _OutlineAction(
-                                text: 'ATTENDING',
-                                onTap: () => _recordResponse('ATTENDING'),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: _TextAction(
-                                text: 'UNABLE TO ATTEND',
-                                onTap: () => _recordResponse('UNABLE'),
-                              ),
-                            ),
-                          ],
+                        _FilledAction(
+                          text: 'ATTENDING',
+                          onTap: () => _recordResponse('ATTENDING'),
+                        ),
+                        const SizedBox(height: 8),
+                        _TextAction(
+                          text: 'UNABLE TO ATTEND',
+                          onTap: () => _recordResponse('UNABLE'),
                         ),
                       ],
                       if (errorText != null) ...[
@@ -661,14 +604,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         Text(
                           errorText!,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: RoomColors.error, fontSize: 11),
+                          style: const TextStyle(color: RoomColors.error, fontSize: 12),
                         ),
                       ],
-                      const SizedBox(height: 12),
-                      const Text(
+                      const SizedBox(height: 14),
+                      _MetaText(
                         'RSVP changes are accepted up to 48 hours before the gathering.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: RoomColors.muted, fontSize: 11),
+                        color: RoomColors.muted,
+                        size: 12,
+                        italic: true,
+                        center: true,
                       ),
                     ],
                   )
@@ -682,7 +627,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         style: GoogleFonts.cormorantGaramond(
                           color: RoomColors.goldMuted,
                           fontStyle: FontStyle.italic,
-                          fontSize: 17,
+                          fontSize: 18,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -710,89 +655,203 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const pillars = [
-      ('QUALITY', 'A community of fewer, better — not more.'),
-      ('TRUST', 'Discretion is our foundation. What is said here, remains here.'),
-      ('PURPOSE', 'Every gathering is curated to matter. Nothing here is accidental.'),
-      ('LONGEVITY', 'Relationships that endure beyond the room.'),
-    ];
-
     return _ScreenScroll(
+      topPadding: 28,
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _AboutHeader(),
+          SizedBox(height: 32),
+          _AboutBody(),
+          SizedBox(height: 28),
+          _AboutValue(
+            label: 'QUALITY',
+            lines: [
+              'The room has always been small. That is the point.',
+              'Size is not a constraint. It is the decision.',
+            ],
+          ),
+          _AboutValue(
+            label: 'TRUST',
+            lines: [
+              'What is said in this room stays in this room.',
+              'This is not a rule. It is the culture.',
+            ],
+          ),
+          _AboutValue(
+            label: 'PURPOSE',
+            lines: [
+              'Nothing here is accidental.',
+              'Every gathering, every seat, every conversation — considered.',
+            ],
+          ),
+          _AboutValue(
+            label: 'LONGEVITY',
+            lines: [
+              'The room is where it starts.',
+              'What happens after is the point.',
+            ],
+          ),
+          SizedBox(height: 56),
+          _AboutClosing(),
+          SizedBox(height: 56),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutHeader extends StatelessWidget {
+  const _AboutHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'ROOM +962',
+          style: GoogleFonts.cormorantGaramond(
+            color: RoomColors.gold,
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 2.24,
+            height: 1.1,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'Private Members Community · Amman, Jordan',
+          style: GoogleFonts.dmSans(
+            color: const Color(0xFF7A7068),
+            fontSize: 13,
+            fontWeight: FontWeight.w300,
+            fontStyle: FontStyle.italic,
+            height: 1.35,
+          ),
+        ),
+        const SizedBox(height: 18),
+        const GoldRule(width: double.infinity, opacity: 0.45),
+      ],
+    );
+  }
+}
+
+class _AboutBody extends StatelessWidget {
+  const _AboutBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _AboutParagraph(
+          'We started with a simple question: who in Amman deserves to be in the same room?',
+        ),
+        const SizedBox(height: 16),
+        const _AboutParagraph(
+          'Not the loudest. Not the most connected. Not those with the most impressive title on a business card.',
+        ),
+        const SizedBox(height: 16),
+        const _AboutParagraph(
+          'The ones who make the people around them think differently. The ones who give before they take. The ones who, when they leave a gathering, are missed.',
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Room +962 was built for them.',
+          style: GoogleFonts.dmSans(
+            color: RoomColors.offWhite,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            height: 1.7,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AboutParagraph extends StatelessWidget {
+  final String text;
+
+  const _AboutParagraph(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.dmSans(
+        color: RoomColors.offWhite,
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
+        height: 1.7,
+      ),
+    );
+  }
+}
+
+class _AboutValue extends StatelessWidget {
+  final String label;
+  final List<String> lines;
+
+  const _AboutValue({required this.label, required this.lines});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: RoomColors.gold, width: 0.5)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _TopTitle(
-            title: 'ROOM +962',
-            subtitle: 'Private Members Community · Amman, Jordan',
+          Text(
+            label,
+            style: GoogleFonts.dmSans(
+              color: RoomColors.gold,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.65,
+              height: 1.2,
+            ),
           ),
-          const SizedBox(height: 32),
-          Center(
-            child: Text(
-              'Curated Connections.\\nMeaningful Relationships.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.cormorantGaramond(
+          const SizedBox(height: 12),
+          for (var i = 0; i < lines.length; i++) ...[
+            Text(
+              lines[i],
+              style: GoogleFonts.dmSans(
                 color: RoomColors.offWhite,
-                fontSize: 25,
-                fontStyle: FontStyle.italic,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
                 height: 1.7,
               ),
             ),
-          ),
-          const SizedBox(height: 34),
-          const GoldRule(width: double.infinity, opacity: 0.35),
-          const SizedBox(height: 24),
-          for (final pillar in pillars)
-            Container(
-              margin: const EdgeInsets.only(bottom: 14),
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: RoomColors.obsidian,
-                border: Border.fromBorderSide(
-                  BorderSide(color: RoomColors.border),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _SmallLabel(pillar.$1, gold: true),
-                  const SizedBox(height: 10),
-                  Text(
-                    pillar.$2,
-                    style: const TextStyle(
-                      color: RoomColors.offWhite,
-                      fontSize: 14,
-                      height: 1.65,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          const SizedBox(height: 20),
-          const GoldRule(width: double.infinity, opacity: 0.35),
-          const SizedBox(height: 24),
-          Text(
-            'Members are expected to arrive with generosity, leave with discretion, and contribute with intent.',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.cormorantGaramond(
-              color: RoomColors.offWhite,
-              fontSize: 17,
-              fontStyle: FontStyle.italic,
-              height: 1.8,
-            ),
-          ),
-          const SizedBox(height: 34),
-          const Center(
-            child: Text(
-              'MEMBERSHIP BY APPLICATION ONLY',
-              style: TextStyle(
-                color: RoomColors.goldMuted,
-                fontSize: 10,
-                letterSpacing: 1.5,
-              ),
-            ),
-          ),
+            if (i != lines.length - 1) const SizedBox(height: 4),
+          ],
         ],
+      ),
+    );
+  }
+}
+
+class _AboutClosing extends StatelessWidget {
+  const _AboutClosing();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Arrive with generosity.\nLeave with discretion.\nContribute with intent.',
+        textAlign: TextAlign.center,
+        style: GoogleFonts.cormorantGaramond(
+          color: RoomColors.gold,
+          fontSize: 22,
+          fontWeight: FontWeight.w300,
+          fontStyle: FontStyle.italic,
+          height: 1.8,
+        ),
       ),
     );
   }
@@ -809,6 +868,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
+  static final Set<String> _seenProfileWelcome = <String>{};
+
   late final AnimationController controller;
   bool showingBack = false;
 
@@ -817,7 +878,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 400),
     );
   }
 
@@ -848,7 +909,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: Column(
               children: const [
                 SizedBox(height: 40),
-                _MutedMemberCard(
+                _EmptyLine(
                   title: 'NO ACTIVE MEMBERSHIP',
                   body: 'This member access is no longer active.',
                 ),
@@ -857,10 +918,28 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
         }
 
+        final welcomeKey = member.email.toLowerCase();
+        final showWelcome = !_seenProfileWelcome.contains(welcomeKey);
+        if (showWelcome) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _seenProfileWelcome.add(welcomeKey);
+          });
+        }
+
         return _ScreenScroll(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: _TextAction(
+                  text: 'SHARE MEMBERSHIP CARD',
+                  onTap: () {},
+                  compact: true,
+                  gold: true,
+                ),
+              ),
+              const SizedBox(height: 10),
               GestureDetector(
                 onTap: flip,
                 child: AnimatedBuilder(
@@ -886,38 +965,48 @@ class _ProfileScreenState extends State<ProfileScreen>
                   },
                 ),
               ),
-              const SizedBox(height: 30),
-              const _SmallLabel('SHARE'),
               const SizedBox(height: 12),
-              _TextAction(text: 'SHARE MEMBERSHIP CARD', onTap: () {}),
+              _MetaText(
+                'Tap to reveal your access credential.',
+                color: RoomColors.muted,
+                size: 12,
+                italic: true,
+                center: true,
+              ),
+              if (showWelcome) ...[
+                const SizedBox(height: 22),
+                Text(
+                  'Your place in this room is yours.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.cormorantGaramond(
+                    color: RoomColors.goldMuted,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ],
               const SizedBox(height: 28),
               const GoldRule(width: double.infinity, opacity: 0.35),
               const SizedBox(height: 22),
               const Align(
                 alignment: Alignment.centerLeft,
-                child: _SmallLabel('YOUR MEMBERSHIP'),
+                child: _SmallLabel('YOUR RECORD', gold: true),
               ),
               const SizedBox(height: 12),
               _DetailRow(label: 'MEMBER SINCE', value: member.yearJoined.toString()),
-              _DetailRow(label: 'MEMBER NUMBER', value: member.memberNumber),
-              _DetailRow(label: 'TIER', value: _tierLabel(member.tier)),
-              _DetailRow(label: 'STATUS', value: member.status == 'active' ? 'Active' : member.status),
-              const _DetailRow(label: 'GATHERINGS ATTENDED', value: '7'),
-              const SizedBox(height: 24),
+              _DetailRow(label: 'MEMBER NO.', value: member.memberNumber),
+              _DetailRow(label: 'TIER', value: _tierLabel(member.tier), tier: true),
+              const _DetailRow(label: 'GATHERINGS', value: '7'),
+              const SizedBox(height: 28),
               const GoldRule(width: double.infinity, opacity: 0.35),
               const SizedBox(height: 24),
-              const Text(
+              _MetaText(
                 'ROOM +962 · AMMAN, JORDAN',
-                style: TextStyle(
-                  color: RoomColors.goldMuted,
-                  fontSize: 10,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'v1.0.0',
-                style: TextStyle(color: RoomColors.muted, fontSize: 9),
+                color: RoomColors.gold,
+                size: 10,
+                center: true,
               ),
               const SizedBox(height: 28),
               InkWell(
@@ -935,13 +1024,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                     (route) => false,
                   );
                 },
-                child: const Text(
+                child: Text(
                   'SIGN OUT',
-                  style: TextStyle(
-                    color: RoomColors.muted,
-                    fontSize: 10,
-                    letterSpacing: 1.4,
-                  ),
+                  textAlign: TextAlign.center,
+                  style: _labelStyle(color: RoomColors.error, size: 11, spacing: 1.4),
                 ),
               ),
             ],
@@ -961,7 +1047,7 @@ String _tierLabel(String tier) {
     case 'corporate':
       return 'Corporate';
     default:
-      return 'Full Member';
+      return 'Member';
   }
 }
 
@@ -973,42 +1059,40 @@ class _MembershipCardFront extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.586,
+      aspectRatio: 1.75,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: RoomColors.charcoal,
-          border: Border.all(color: RoomColors.gold.withOpacity(0.6)),
+          border: const Border(top: BorderSide(color: RoomColors.gold, width: 1.5)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 40,
-              offset: const Offset(0, 12),
+              color: Colors.black.withOpacity(0.44),
+              blurRadius: 38,
+              offset: const Offset(0, 18),
             ),
           ],
         ),
         child: Stack(
           children: [
-            const Positioned(
+            Positioned(
               top: 0,
               left: 0,
               child: Text(
                 'ROOM +962',
-                style: TextStyle(
+                style: GoogleFonts.cormorantGaramond(
                   color: RoomColors.gold,
-                  fontSize: 13,
-                  letterSpacing: 3,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.6,
                 ),
               ),
             ),
             const Positioned(
               top: 0,
               right: 0,
-              child: Text(
-                '◆',
-                style: TextStyle(color: RoomColors.gold, fontSize: 10),
-              ),
+              child: Text('◆', style: TextStyle(color: RoomColors.gold, fontSize: 14)),
             ),
             Center(
               child: Column(
@@ -1019,33 +1103,39 @@ class _MembershipCardFront extends StatelessWidget {
                     height: 72,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: RoomColors.gold, width: 1.5),
+                      border: Border.all(color: RoomColors.gold, width: 1),
                       color: RoomColors.slate,
                     ),
-                    child: const Icon(
-                      Icons.person_outline_rounded,
-                      color: RoomColors.goldMuted,
-                      size: 38,
+                    child: Center(
+                      child: Text(
+                        _initials(member.fullName),
+                        style: GoogleFonts.cormorantGaramond(
+                          color: RoomColors.gold,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 12),
                   Text(
                     member.fullName,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.cormorantGaramond(
                       color: RoomColors.offWhite,
-                      fontSize: 20,
-                      letterSpacing: 1,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w300,
+                      height: 1.0,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     member.professionalField.toUpperCase(),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: RoomColors.goldMuted,
-                      fontSize: 10,
-                      letterSpacing: 2,
+                    style: _labelStyle(
+                      color: RoomColors.gold,
+                      size: 10,
+                      spacing: 2.0,
                     ),
                   ),
                 ],
@@ -1058,13 +1148,28 @@ class _MembershipCardFront extends StatelessWidget {
             ),
             Positioned(
               bottom: 0,
+              left: 0,
               right: 0,
-              child: _CardMeta(label: 'TIER', value: _tierLabel(member.tier)),
+              child: Center(
+                child: _CardMeta(label: 'MEMBER NO.', value: member.memberNumber, center: true),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: _CardMeta(label: 'TIER', value: _tierLabel(member.tier), alignEnd: true, tier: true),
             ),
           ],
         ),
       ),
     );
+  }
+
+  static String _initials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty || parts.first.isEmpty) return 'R';
+    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+    return '${parts.first.substring(0, 1)}${parts.last.substring(0, 1)}'.toUpperCase();
   }
 }
 
@@ -1076,55 +1181,59 @@ class _MembershipCardBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.586,
+      aspectRatio: 1.75,
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: RoomColors.charcoal,
-          border: Border.all(color: RoomColors.gold.withOpacity(0.6)),
+          color: const Color(0xFF0D0C0B),
+          border: const Border(top: BorderSide(color: RoomColors.gold, width: 1.5)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 40,
-              offset: const Offset(0, 12),
+              color: Colors.black.withOpacity(0.44),
+              blurRadius: 38,
+              offset: const Offset(0, 18),
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            const _SmallLabel('MEMBERSHIP QR'),
-            const SizedBox(height: 12),
-            QrImageView(
-              data: 'room962:${member.memberNumber}:${member.fullName}:${member.yearJoined}',
-              size: 132,
-              backgroundColor: Colors.transparent,
-              dataModuleStyle: const QrDataModuleStyle(
-                dataModuleShape: QrDataModuleShape.square,
-                color: RoomColors.gold,
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  QrImageView(
+                    data: 'room962:${member.memberNumber}:${member.fullName}:${member.yearJoined}',
+                    size: 120,
+                    backgroundColor: Colors.transparent,
+                    dataModuleStyle: const QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.square,
+                      color: RoomColors.gold,
+                    ),
+                    eyeStyle: const QrEyeStyle(
+                      eyeShape: QrEyeShape.square,
+                      color: RoomColors.gold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _MetaText(
+                    member.memberNumber,
+                    color: RoomColors.goldMuted,
+                    size: 11,
+                    spacing: 1.6,
+                    center: true,
+                  ),
+                ],
               ),
-              eyeStyle: const QrEyeStyle(
-                eyeShape: QrEyeShape.square,
+            ),
+            const Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _MetaText(
+                'ROOM +962 · AMMAN, JORDAN',
                 color: RoomColors.gold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Room +962 · Amman, Jordan',
-              style: TextStyle(color: RoomColors.goldMuted, fontSize: 9),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              member.memberNumber,
-              style: const TextStyle(color: RoomColors.muted, fontSize: 9),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'This card is personal and non-transferable.',
-              style: TextStyle(
-                color: RoomColors.muted,
-                fontSize: 8,
-                letterSpacing: 1,
+                size: 9,
+                center: true,
               ),
             ),
           ],
@@ -1137,34 +1246,60 @@ class _MembershipCardBack extends StatelessWidget {
 class _CardMeta extends StatelessWidget {
   final String label;
   final String value;
+  final bool alignEnd;
+  final bool center;
+  final bool tier;
 
   const _CardMeta({
     required this.label,
     required this.value,
+    this.alignEnd = false,
+    this.center = false,
+    this.tier = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          label == 'TIER' ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: center
+          ? CrossAxisAlignment.center
+          : alignEnd
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: RoomColors.goldMuted,
-            fontSize: 8,
-            letterSpacing: 2,
-          ),
+          style: _labelStyle(color: RoomColors.goldMuted, size: 9, spacing: 1.5),
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: GoogleFonts.cormorantGaramond(
-            color: RoomColors.gold,
-            fontSize: label == 'TIER' ? 12 : 16,
-          ),
-        ),
+        tier
+            ? Text(
+                value,
+                style: GoogleFonts.cormorantGaramond(
+                  color: RoomColors.offWhite,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300,
+                  fontStyle: FontStyle.italic,
+                ),
+              )
+            : label == 'MEMBER SINCE'
+                ? Text(
+                    value,
+                    style: GoogleFonts.cormorantGaramond(
+                      color: RoomColors.offWhite,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  )
+                : Text(
+                    value,
+                    style: GoogleFonts.dmSans(
+                      color: RoomColors.offWhite,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
       ],
     );
   }
@@ -1173,10 +1308,12 @@ class _CardMeta extends StatelessWidget {
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
+  final bool tier;
 
   const _DetailRow({
     required this.label,
     required this.value,
+    this.tier = false,
   });
 
   @override
@@ -1184,28 +1321,35 @@ class _DetailRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: RoomColors.border)),
+        border: Border(bottom: BorderSide(color: RoomColors.border, width: 0.4)),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
-                color: RoomColors.goldMuted,
-                fontSize: 10,
-                letterSpacing: 1.3,
-              ),
+              style: _labelStyle(color: RoomColors.goldMuted, size: 11, spacing: 1.4),
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: RoomColors.offWhite,
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
+          tier
+              ? Text(
+                  value,
+                  style: GoogleFonts.cormorantGaramond(
+                    color: RoomColors.offWhite,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              : Text(
+                  value,
+                  style: GoogleFonts.dmSans(
+                    color: RoomColors.offWhite,
+                    fontSize: 15,
+                    fontWeight: label == 'MEMBER NO.' ? FontWeight.w600 : FontWeight.w400,
+                    letterSpacing: label == 'MEMBER NO.' ? 0.4 : 0.1,
+                  ),
+                ),
         ],
       ),
     );
@@ -1222,54 +1366,35 @@ class _StatusBadge extends StatelessWidget {
     final attending = text == 'ATTENDING';
     final label = text == 'UNABLE' ? 'UNABLE TO ATTEND' : text;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: attending ? RoomColors.gold : Colors.transparent,
-        border: Border.all(
-          color: attending ? RoomColors.gold : RoomColors.goldMuted,
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: attending ? RoomColors.voidBlack : RoomColors.goldMuted,
-          fontSize: 10,
-          letterSpacing: 1.4,
-          fontWeight: FontWeight.w500,
-        ),
+    return Text(
+      label,
+      style: _labelStyle(
+        color: attending ? RoomColors.gold : RoomColors.muted,
+        size: 10,
+        spacing: 1.4,
       ),
     );
   }
 }
 
-class _OutlineAction extends StatelessWidget {
+class _FilledAction extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const _OutlineAction({
-    required this.text,
-    required this.onTap,
-  });
+  const _FilledAction({required this.text, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 46,
+        height: 48,
+        width: double.infinity,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border.all(color: RoomColors.gold),
-        ),
+        color: RoomColors.gold,
         child: Text(
           text,
-          style: const TextStyle(
-            color: RoomColors.gold,
-            fontSize: 11,
-            letterSpacing: 1.8,
-            fontWeight: FontWeight.w500,
-          ),
+          style: _labelStyle(color: RoomColors.voidBlack, size: 12, spacing: 1.8),
         ),
       ),
     );
@@ -1279,10 +1404,14 @@ class _OutlineAction extends StatelessWidget {
 class _TextAction extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
+  final bool compact;
+  final bool gold;
 
   const _TextAction({
     required this.text,
     required this.onTap,
+    this.compact = false,
+    this.gold = false,
   });
 
   @override
@@ -1290,16 +1419,12 @@ class _TextAction extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        height: 46,
+        height: compact ? 30 : 46,
         child: Center(
           child: Text(
             text,
-            style: const TextStyle(
-              color: RoomColors.goldMuted,
-              fontSize: 11,
-              letterSpacing: 1.8,
-              fontWeight: FontWeight.w500,
-            ),
+            textAlign: TextAlign.center,
+            style: _labelStyle(color: gold ? RoomColors.gold : RoomColors.muted, size: 11, spacing: 1.8),
           ),
         ),
       ),
@@ -1307,43 +1432,49 @@ class _TextAction extends StatelessWidget {
   }
 }
 
-class _AnnouncementCard extends StatelessWidget {
+class _QuietNavText extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+
+  const _QuietNavText({required this.text, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Text(
+        text,
+        style: _labelStyle(color: RoomColors.goldMuted, size: 10, spacing: 1.5),
+      ),
+    );
+  }
+}
+
+class _AnnouncementEntry extends StatelessWidget {
   final String date;
   final String body;
 
-  const _AnnouncementCard({
-    required this.date,
-    required this.body,
-  });
+  const _AnnouncementEntry({required this.date, required this.body});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 18),
       decoration: const BoxDecoration(
-        color: RoomColors.obsidian,
-        border: Border(top: BorderSide(color: RoomColors.gold)),
+        border: Border(top: BorderSide(color: RoomColors.gold, width: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            date.toUpperCase(),
-            style: const TextStyle(
-              color: RoomColors.goldMuted,
-              fontSize: 10,
-              letterSpacing: 1.4,
-            ),
-          ),
+          _MetaText(date, color: RoomColors.gold, size: 11, spacing: 1.2),
           const SizedBox(height: 10),
           Text(
             body,
-            style: const TextStyle(
+            style: GoogleFonts.dmSans(
               color: RoomColors.offWhite,
               fontSize: 14,
-              height: 1.75,
-              fontWeight: FontWeight.w300,
+              height: 1.7,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
@@ -1355,10 +1486,12 @@ class _AnnouncementCard extends StatelessWidget {
 class _TopTitle extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final bool structural;
 
   const _TopTitle({
     required this.title,
     this.subtitle,
+    this.structural = false,
   });
 
   @override
@@ -1367,24 +1500,19 @@ class _TopTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
-          style: GoogleFonts.cormorantGaramond(
-            color: RoomColors.gold,
-            fontSize: 36,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 2,
-          ),
+          title.toUpperCase(),
+          style: structural
+              ? _labelStyle(color: RoomColors.gold, size: 28, spacing: 2.4)
+              : GoogleFonts.cormorantGaramond(
+                  color: RoomColors.gold,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2.2,
+                ),
         ),
         if (subtitle != null) ...[
           const SizedBox(height: 6),
-          Text(
-            subtitle!,
-            style: GoogleFonts.cormorantGaramond(
-              color: RoomColors.goldMuted,
-              fontSize: 16,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+          _MetaText(subtitle!, color: RoomColors.goldMuted, size: 13, italic: true),
         ],
         const SizedBox(height: 22),
         const GoldRule(width: double.infinity, opacity: 0.35),
@@ -1403,14 +1531,56 @@ class _SmallLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: TextStyle(
+      style: _labelStyle(
         color: gold ? RoomColors.gold : RoomColors.goldMuted,
-        fontSize: 10,
-        letterSpacing: 1.8,
-        fontWeight: FontWeight.w500,
+        size: 11,
+        spacing: 1.8,
       ),
     );
   }
+}
+
+class _MetaText extends StatelessWidget {
+  final String text;
+  final Color color;
+  final double size;
+  final double spacing;
+  final bool italic;
+  final bool center;
+
+  const _MetaText(
+    this.text, {
+    required this.color,
+    this.size = 13,
+    this.spacing = 0.2,
+    this.italic = false,
+    this.center = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      textAlign: center ? TextAlign.center : TextAlign.start,
+      style: GoogleFonts.dmSans(
+        color: color,
+        fontSize: size,
+        fontWeight: FontWeight.w300,
+        fontStyle: italic ? FontStyle.italic : FontStyle.normal,
+        letterSpacing: spacing,
+        height: 1.45,
+      ),
+    );
+  }
+}
+
+TextStyle _labelStyle({required Color color, required double size, double spacing = 1.8}) {
+  return GoogleFonts.dmSans(
+    color: color,
+    fontSize: size,
+    fontWeight: FontWeight.w600,
+    letterSpacing: spacing,
+  );
 }
 
 class _ScreenScroll extends StatelessWidget {

@@ -29,17 +29,62 @@ String roomLongDate(DateTime date, {bool includeTime = false}) {
 
   final day = weekdays[date.weekday - 1];
   final month = months[date.month - 1];
-  final base = '$day, ${date.day} $month ${date.year}';
 
-  if (!includeTime) return base;
+  if (!includeTime) return '$day, ${date.day} $month ${date.year}';
 
   var hour = date.hour;
-  final minute = date.minute.toString().padLeft(2, '0');
-  final suffix = hour >= 12 ? 'PM' : 'AM';
+  final minute = date.minute;
+  final period = hour >= 17
+      ? 'in the evening'
+      : hour >= 12
+          ? 'in the afternoon'
+          : 'in the morning';
   hour = hour % 12;
   if (hour == 0) hour = 12;
+  final time = minute == 0 ? '$hour' : '$hour:${minute.toString().padLeft(2, '0')}';
 
-  return '$base · $hour:$minute $suffix';
+  return '$day, ${date.day} $month ${date.year} · $time $period';
+}
+
+String roomHomeDate(DateTime date) {
+  const weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  final day = weekdays[date.weekday - 1];
+  final month = months[date.month - 1];
+  var hour = date.hour;
+  final minute = date.minute;
+  final period = hour >= 17
+      ? 'in the evening'
+      : hour >= 12
+          ? 'in the afternoon'
+          : 'in the morning';
+  hour = hour % 12;
+  if (hour == 0) hour = 12;
+  final time = minute == 0 ? '$hour' : '$hour:${minute.toString().padLeft(2, '0')}';
+
+  return '$day · ${date.day} $month · $time $period';
 }
 
 String roomShortDate(DateTime date) {
@@ -206,10 +251,11 @@ class RoomEventRecord {
   }
 
   String get dateLine => roomLongDate(eventDate, includeTime: true);
+  String get homeDateLine => roomHomeDate(eventDate);
   bool get isUpcoming => eventDate.isAfter(DateTime.now());
   int get seatsRemaining => capacity - attendingCount;
   bool get isFull => attendingCount >= capacity;
-  String get capacityLine => '$attendingCount / $capacity attending';
+  String get capacityLine => '$attendingCount of $capacity seats filled';
 }
 
 class RoomAnnouncementRecord {
@@ -469,8 +515,8 @@ class RoomRepository extends ChangeNotifier {
     }
 
     _addAdminNotification(
-      title: 'Acceptance email sent',
-      body: '${application.fullName} can now sign in as a member.',
+      title: 'ROOM +962',
+      body: 'The room is yours. Acceptance email sent to ${application.email}.',
       channel: 'Applicant email',
       target: application.email,
     );
@@ -769,7 +815,7 @@ class RoomRepository extends ChangeNotifier {
         title: 'Founders Dinner',
         eventDate: DateTime(2026, 6, 26, 20),
         locationName: 'Amman',
-        description: 'Dinner for members at a private table in Amman.',
+        description: 'The first gathering of Room +962. Eighteen seats. One table. Amman. The evening is deliberately small: no speeches, no stage, no noise. Just members, conversation, and the beginning of the room.',
         capacity: 18,
         isPublished: true,
         visibleToAllMembers: true,
@@ -782,7 +828,7 @@ class RoomRepository extends ChangeNotifier {
         title: 'A Private Table',
         eventDate: DateTime(2026, 7, 10, 19, 30),
         locationName: 'Jabal Amman',
-        description: 'Small table conversation with one invited guest.',
+        description: 'A seated dinner at a private address in Jabal Amman. The location is shared with confirmed members only. Fourteen seats are held for members who intend to be present, not merely attend. The table is the whole evening.',
         capacity: 14,
         isPublished: true,
         visibleToAllMembers: true,
@@ -822,14 +868,14 @@ class RoomRepository extends ChangeNotifier {
       RoomAnnouncementRecord(
         id: 'announcement-demo-1',
         title: 'Calendar update',
-        body: 'Founders Dinner is now on the calendar.',
+        body: 'The first gathering has a date.',
         isPublished: true,
         publishedAt: DateTime(2026, 6, 14),
       ),
       RoomAnnouncementRecord(
         id: 'announcement-demo-2',
         title: 'Attendance',
-        body: 'Attendance helps shape the room.',
+        body: 'Who shows up shapes what this becomes.',
         isPublished: true,
         publishedAt: DateTime(2026, 6, 9),
       ),

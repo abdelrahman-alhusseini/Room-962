@@ -37,23 +37,11 @@ class RoomShell extends StatelessWidget {
 class _SubtleGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final linePaint = Paint()
-      ..color = RoomColors.border.withOpacity(0.18)
-      ..strokeWidth = 1;
-
-    const gap = 80.0;
-    for (double x = 0; x < size.width; x += gap) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
-    }
-    for (double y = 0; y < size.height; y += gap) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), linePaint);
-    }
-
     final vignette = Paint()
       ..shader = RadialGradient(
         colors: [
           Colors.transparent,
-          RoomColors.voidBlack.withOpacity(0.74),
+          RoomColors.voidBlack.withOpacity(0.58),
         ],
         stops: const [0.0, 1.0],
       ).createShader(Offset.zero & size);
@@ -105,10 +93,10 @@ class QuietButton extends StatelessWidget {
       onTap: onPressed,
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 150),
-        style: GoogleFonts.inter(
+        style: GoogleFonts.cormorantGaramond(
           color: enabled ? RoomColors.goldMuted : RoomColors.muted,
           fontSize: larger ? 14 : 11,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           letterSpacing: larger ? 1.2 : 1.4,
         ),
         child: Text(text.toUpperCase()),
@@ -134,11 +122,11 @@ class SectionMarker extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           text.toUpperCase(),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.cormorantGaramond(
             color: RoomColors.gold,
             fontSize: 9,
             letterSpacing: 1.8,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -176,10 +164,10 @@ class LineTextField extends StatelessWidget {
       maxLines: maxLines,
       onChanged: onChanged,
       readOnly: readOnly,
-      style: GoogleFonts.inter(
+      style: GoogleFonts.cormorantGaramond(
         color: readOnly ? RoomColors.goldMuted : RoomColors.offWhite,
         fontSize: 15,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         height: 1.5,
       ),
       cursorColor: RoomColors.gold,
@@ -215,7 +203,7 @@ class ProgressDots extends StatelessWidget {
           height: active ? 10 : 8,
           decoration: BoxDecoration(
             color: done || active ? RoomColors.gold : RoomColors.border,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.zero,
             boxShadow: active
                 ? [
                     BoxShadow(
@@ -256,10 +244,10 @@ class LineDropdownField extends StatelessWidget {
       isExpanded: true,
       dropdownColor: RoomColors.obsidian,
       iconEnabledColor: RoomColors.goldMuted,
-      style: GoogleFonts.inter(
+      style: GoogleFonts.cormorantGaramond(
         color: RoomColors.offWhite,
         fontSize: 15,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
       ),
       decoration: InputDecoration(
         labelText: requiredField ? '$label *' : label,
@@ -302,10 +290,10 @@ class LineDateField extends StatelessWidget {
       controller: controller,
       readOnly: true,
       onTap: onTap,
-      style: GoogleFonts.inter(
+      style: GoogleFonts.cormorantGaramond(
         color: RoomColors.offWhite,
         fontSize: 15,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         height: 1.5,
       ),
       cursorColor: RoomColors.gold,

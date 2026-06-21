@@ -613,7 +613,7 @@ class _QuestionStep extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   data.instruction,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.cormorantGaramond(
                     color: RoomColors.goldMuted,
                     fontSize: 11,
                     fontWeight: FontWeight.w300,
@@ -727,7 +727,7 @@ class _CovenantStep extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'I confirm that I have read and acknowledge the covenant above.',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.cormorantGaramond(
                         color: RoomColors.offWhite,
                         fontSize: 13,
                         height: 1.6,
